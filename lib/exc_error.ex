@@ -3,7 +3,6 @@ defmodule ExcError do
 
   defmacro define(name, options \\ []) do
     record_fields = prepare_record_fields(options) ++ @default_fields
-    name = Macro.expand_once(name, __CALLER__)
 
     quote location: :keep do
       defmodule unquote(name) do

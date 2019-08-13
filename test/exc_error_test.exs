@@ -6,33 +6,27 @@ defmodule ExcErrorTest do
   require Helpers
 
   describe "exception without message" do
-    @exc Helpers.random_struct()
-
-    ExcError.define(@exc)
+    ExcError.define(Error)
 
     test "works" do
-      assert_error(@exc, to_string(@exc))
+      assert_error(Error, "Error")
     end
   end
 
   describe "exception with fixed message" do
-    @exc Helpers.random_struct()
-
-    ExcError.define(@exc, message: "fixed error message")
+    ExcError.define(Error2, message: "fixed error message")
 
     test "works" do
-      assert_error(@exc, "fixed error message")
+      assert_error(Error2, "fixed error message")
     end
   end
 
   describe "exception with custom message" do
-    @exc Helpers.random_struct()
-
-    ExcError.define(@exc)
+    ExcError.define(Error3)
 
     test "works" do
       assert_error(
-        @exc,
+        Error3,
         [message: "custom message"],
         "custom message"
       )
@@ -40,15 +34,13 @@ defmodule ExcErrorTest do
   end
 
   describe "exception with custom message calllback" do
-    @exc Helpers.random_struct()
-
-    ExcError.define @exc do
+    ExcError.define Error4 do
       def message(exc), do: "custom callback message - #{exc.message}"
     end
 
     test "works" do
       assert_error(
-        @exc,
+        Error4,
         [message: "custom error message"],
         "custom callback message - custom error message"
       )
@@ -56,15 +48,13 @@ defmodule ExcErrorTest do
   end
 
   describe "exception with several custom fields" do
-    @exc Helpers.random_struct()
-
-    ExcError.define @exc, [:some_field, :other_field] do
+    ExcError.define Error5, [:some_field, :other_field] do
       def message(exc), do: "#{exc.some_field} - #{exc.other_field}"
     end
 
     test "works" do
       assert_error(
-        @exc,
+        Error5,
         [some_field: "some_field_value", other_field: "other_field_value"],
         "some_field_value - other_field_value"
       )
@@ -72,36 +62,40 @@ defmodule ExcErrorTest do
   end
 
   describe "exception with several custom fields but with default message" do
-    @exc Helpers.random_struct()
-
-    ExcError.define(@exc, [:some_field, :other_field])
+    ExcError.define(Error6, [:some_field, :other_field])
 
     test "works" do
-      assert_error(@exc)
+      assert_error(Error6)
     end
   end
 
   describe "exception with custom method" do
-    @exc Helpers.random_struct()
-
-    ExcError.define @exc do
+    ExcError.define Error7 do
       def test(), do: :test
     end
 
     test "works" do
-      assert @exc.test == :test
+      assert Error7.test() == :test
     end
   end
 
   describe "exception with default message but custom message callback" do
-    @exc Helpers.random_struct()
-
-    ExcError.define @exc, message: "fixed message" do
+    ExcError.define Error8, message: "fixed message" do
       def message(exc), do: "#{exc.message} - message callback"
     end
 
     test "works" do
-      assert_error(@exc, "fixed message - message callback")
+      assert_error(Error8, "fixed message - message callback")
+    end
+  end
+
+  describe "exception in submodule" do
+    defmodule SubModule do
+      ExcError.define(Error)
+    end
+
+    test "works" do
+      assert_error(SubModule.Error)
     end
   end
 
