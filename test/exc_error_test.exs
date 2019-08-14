@@ -5,87 +5,87 @@ defmodule ExcErrorTest do
   require ExcError
   require Helpers
 
-  describe "exception without message" do
-    ExcError.define(Error)
+  describe "error without message" do
+    ExcError.define(ErrorWithNoMessage)
 
     test "works" do
-      assert_error(Error, "Error")
+      assert_error(ErrorWithNoMessage, "ErrorWithNoMessage")
     end
   end
 
-  describe "exception with fixed message" do
-    ExcError.define(Error2, message: "fixed error message")
+  describe "error with fixed message" do
+    ExcError.define(ErrorWithFixedMessage, message: "fixed error message")
 
     test "works" do
-      assert_error(Error2, "fixed error message")
+      assert_error(ErrorWithFixedMessage, "fixed error message")
     end
   end
 
-  describe "exception with custom message" do
-    ExcError.define(Error3)
+  describe "error with custom message" do
+    ExcError.define(ErrorWithCustomMessage)
 
     test "works" do
       assert_error(
-        Error3,
+        ErrorWithCustomMessage,
         [message: "custom message"],
         "custom message"
       )
     end
   end
 
-  describe "exception with custom message calllback" do
-    ExcError.define Error4 do
+  describe "error with custom message calllback" do
+    ExcError.define ErrorWithMessageCallback do
       def message(exc), do: "custom callback message - #{exc.message}"
     end
 
     test "works" do
       assert_error(
-        Error4,
+        ErrorWithMessageCallback,
         [message: "custom error message"],
         "custom callback message - custom error message"
       )
     end
   end
 
-  describe "exception with several custom fields" do
-    ExcError.define Error5, [:some_field, :other_field] do
+  describe "error with several custom fields" do
+    ExcError.define ErrorWithCustomFields, [:some_field, :other_field] do
       def message(exc), do: "#{exc.some_field} - #{exc.other_field}"
     end
 
     test "works" do
       assert_error(
-        Error5,
+        ErrorWithCustomFields,
         [some_field: "some_field_value", other_field: "other_field_value"],
         "some_field_value - other_field_value"
       )
     end
   end
 
-  describe "exception with several custom fields but with default message" do
-    ExcError.define(Error6, [:some_field, :other_field])
+  describe "error with several custom fields but without message" do
+    ExcError.define(ErrorWithFieldsButNoMessage, [:some_field, :other_field])
 
     test "works" do
-      assert_error(Error6)
+      assert_error(ErrorWithFieldsButNoMessage)
     end
   end
 
-  describe "exception with custom method" do
-    ExcError.define Error7 do
+  describe "error with custom method" do
+    ExcError.define ErrorWithMethod do
       def test(), do: :test
     end
 
     test "works" do
-      assert Error7.test() == :test
+      assert ErrorWithMethod.test() == :test
     end
   end
 
-  describe "exception with default message but custom message callback" do
-    ExcError.define Error8, message: "fixed message" do
+  describe "exception with fixed message but custom message callback" do
+    ExcError.define ErrorWithFixedMessageAndCallback, message: "fixed message" do
       def message(exc), do: "#{exc.message} - message callback"
     end
 
     test "works" do
-      assert_error(Error8, "fixed message - message callback")
+      assert_error(ErrorWithFixedMessageAndCallback, "fixed message - message callback")
     end
   end
 
