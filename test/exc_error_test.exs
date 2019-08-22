@@ -69,6 +69,15 @@ defmodule ExcErrorTest do
     end
   end
 
+  describe "mixed fields with defaults and without" do
+    ExcError.define(ErrorWithMixedFields, [:some_field], other_field: "other-field-value")
+
+    test "works" do
+      error = %ErrorWithMixedFields{some_field: "some-field-value"}
+      assert error.other_field == "other-field-value"
+    end
+  end
+
   describe "error with custom method" do
     ExcError.define ErrorWithMethod do
       def test(), do: :test
