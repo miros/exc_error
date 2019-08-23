@@ -3,7 +3,6 @@ defmodule ExcErrorTest do
   doctest ExcError
 
   require ExcError
-  require Helpers
 
   describe "error without message" do
     ExcError.define(ErrorWithNoMessage)

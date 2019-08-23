@@ -2,11 +2,25 @@ defmodule ExcError do
   @default_fields [:cause]
 
   defmacro define(name, options \\ []) do
-    record_fields = prepare_record_fields(options) ++ @default_fields
+    custom_fields = options |> Enum.reject(&match?({:do, _}, &1))
+
+    record_fields =
+      if(custom_fields == [], do: [:message], else: custom_fields) ++ @default_fields
 
     quote location: :keep do
       defmodule unquote(name) do
         defexception(unquote(record_fields))
+
+        unquote do
+          if custom_fields == [] do
+            quote do
+              @type t :: %__MODULE__{
+                      message: term,
+                      cause: term
+                    }
+            end
+          end
+        end
 
         import unquote(__MODULE__).Helpers
 
@@ -44,11 +58,6 @@ defmodule ExcError do
         inspect(term)
       end
     end
-  end
-
-  defp prepare_record_fields(options) do
-    fields = options |> Enum.reject(&match?({:do, _}, &1))
-    if Enum.empty?(fields), do: [:message], else: fields
   end
 
   def default_message(exc) do
