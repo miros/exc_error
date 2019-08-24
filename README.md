@@ -15,14 +15,13 @@ They bring some advantages:
 
 This library is a thin wrapper to reduce boilerplate for defining Error structs that implement `String.Chars` protocol and `Exception` behaviour.
 
-Feel free to use this "Structs as Errors" pattern but please do not use this Library.
-You do not need any libs to use some architectural pattern.
+**Feel free to use this "Structs as Errors" pattern but please do not use this Library.
+You do not need any libs to use some architectural pattern.**
 
 However some usage examples:
 
-```
-
-# General Usage
+```elixir
+# Basic Usage
 
 module SomeModule do
   require ExcError
