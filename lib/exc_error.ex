@@ -1,22 +1,30 @@
 defmodule ExcError do
   @default_fields [:cause]
 
-  defmacro define(name, options \\ []) do
-    custom_fields = options |> Enum.reject(&match?({:do, _}, &1))
+  defmodule Helpers do
+    def to_s({:error, error}), do: to_s(error)
 
-    record_fields =
-      if(custom_fields == [], do: [:message], else: custom_fields) ++ @default_fields
+    def to_s(term) do
+      if String.Chars.impl_for(term) do
+        to_string(term)
+      else
+        inspect(term)
+      end
+    end
+  end
+
+  defmacro define(name, options \\ []) do
+    record_fields = prepare_record_fields(options) ++ @default_fields
 
     quote location: :keep do
       defmodule unquote(name) do
         defexception(unquote(record_fields))
 
         unquote do
-          if custom_fields == [] do
+          unless type_defined?(options[:do]) do
             quote do
               @type t :: %__MODULE__{
-                      message: term,
-                      cause: term
+                      unquote_splicing(field_types(record_fields))
                     }
             end
           end
@@ -48,18 +56,6 @@ defmodule ExcError do
     end
   end
 
-  defmodule Helpers do
-    def to_s({:error, error}), do: to_s(error)
-
-    def to_s(term) do
-      if String.Chars.impl_for(term) do
-        to_string(term)
-      else
-        inspect(term)
-      end
-    end
-  end
-
   def default_message(exc) do
     default_name = exc.__struct__ |> to_string() |> String.split(".") |> List.last()
     msg = Map.get(exc, :message) || default_name
@@ -70,4 +66,26 @@ defmodule ExcError do
       msg
     end
   end
+
+  defp prepare_record_fields(options) do
+    fields = options |> Enum.reject(&match?({:do, _}, &1))
+    if Enum.empty?(fields), do: [:message], else: fields
+  end
+
+  defp field_types(fields) do
+    Enum.map(fields, fn
+      {key, _} -> {key, :term}
+      key -> {key, :term}
+    end)
+  end
+
+  defp type_defined?(nil), do: false
+
+  defp type_defined?({:__block__, _, children}) when is_list(children),
+    do: Enum.any?(children, &struct_typespec?/1)
+
+  defp type_defined?(expr), do: struct_typespec?(expr)
+
+  defp struct_typespec?({:@, _, [{:type, _, [{:"::", _, [{:t, _, _} | _]}]}]}), do: true
+  defp struct_typespec?(_), do: false
 end

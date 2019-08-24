@@ -4,7 +4,9 @@ defmodule ExcErrorTest do
 
   require ExcError
 
-  describe "error without message" do
+  # TODO rewrite to match simple structs
+
+  describe "without message" do
     ExcError.define(ErrorWithNoMessage)
 
     test "works" do
@@ -12,7 +14,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "error with fixed message" do
+  describe "fixed message" do
     ExcError.define(ErrorWithFixedMessage, message: "fixed error message")
 
     test "works" do
@@ -20,7 +22,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "error with custom message" do
+  describe "custom message field" do
     ExcError.define(ErrorWithCustomMessage)
 
     test "works" do
@@ -32,7 +34,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "error with custom message calllback" do
+  describe "custom message calllback" do
     ExcError.define ErrorWithMessageCallback do
       def message(exc), do: "custom callback message - #{exc.message}"
     end
@@ -46,7 +48,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "error with several custom fields" do
+  describe "several custom fields and custom message callback" do
     ExcError.define ErrorWithCustomFields, [:some_field, :other_field] do
       def message(exc), do: "#{exc.some_field} - #{exc.other_field}"
     end
@@ -60,7 +62,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "error with several custom fields but without message" do
+  describe "several custom fields but with default message callback" do
     ExcError.define(ErrorWithFieldsButNoMessage, [:some_field, :other_field])
 
     test "works" do
@@ -87,7 +89,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "exception with fixed message but custom message callback" do
+  describe "fixed message but custom message callback" do
     ExcError.define ErrorWithFixedMessageAndCallback, message: "fixed message" do
       def message(exc), do: "#{exc.message} - message callback"
     end
@@ -97,7 +99,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "exception in submodule" do
+  describe "error in submodule" do
     defmodule SubModule do
       ExcError.define(Error)
     end
@@ -107,7 +109,7 @@ defmodule ExcErrorTest do
     end
   end
 
-  describe "String.Chars protocl" do
+  describe "String.Chars protocol" do
     ExcError.define(PrintableError)
 
     test "prints exception message" do

@@ -44,6 +44,9 @@ some_text = "error #{my_error}"
 # You can raise error as exception
 raise my_error
 
+# default type for struct is declared for you
+@spec some_function() :: :ok | {:error, SomeError.t()}
+
 # You can define some custom fields for your struct (just like in defstruct)
 
 ExcError.define SomeError, :some_field, other_field: "default_value"
@@ -73,6 +76,14 @@ end
 ExcError.define SomeError
 
 "some message" = to_string(%SomeError{message: "some message"})
+
+# You can define custom type for your struct
+
+ExcError.define SomeError, [:custom_field] do
+    @type t :: %__MODULE__{
+            custom_field: atom
+          }
+end
 
 # All defined structs have :cause field by default
 # Use it to wrap other errors
