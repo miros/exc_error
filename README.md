@@ -16,7 +16,10 @@ They bring some advantages:
 This library is a thin wrapper to reduce boilerplate for defining Error structs that implement `String.Chars` protocol and `Exception` behaviour.
 
 **Feel free to use this "Structs as Errors" pattern but please do not use this Library.
-You do not need any libs to use some architectural pattern.**
+You do not need any libs to use some architectural pattern.
+I have made this library to get rid of annoying duplication in internal company projects.
+I recommend you to tinker your own version tailored to your specific needs. 
+**
 
 However some usage examples:
 
