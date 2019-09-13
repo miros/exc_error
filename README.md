@@ -92,11 +92,17 @@ end
 
 ExcError.define SomeError
 
-some_error = SomeError.wrap({:error, :other_error})
-:other_error = some_error.cause
+error_struct = SomeError.wrap({:error, :other_error})
+:other_error = error_struct.cause
 
-some_error = SomeError.wrap(%SomeStruct{})
-%SomeStruct{} = some_error.cause
+error_struct = SomeError.wrap(%SomeStruct{})
+%SomeStruct{} = error_struct.cause
+
+ExcError.define SomeOtherError, [:some_field]
+
+error_struct = SomeOtherError.wrap({:error, :other_error}, some_field: "some-value")
+:other_error = error_struct.cause
+"some-value" = error_struct.some_field
 
 ```
 

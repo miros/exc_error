@@ -118,7 +118,7 @@ defmodule ExcErrorTest do
   end
 
   describe "wrap" do
-    ExcError.define(ErrorWrapper)
+    ExcError.define(ErrorWrapper, [:some_field])
 
     test "wraps error tuple" do
       exc = ErrorWrapper.wrap({:error, :some_error})
@@ -127,11 +127,21 @@ defmodule ExcErrorTest do
       assert to_string(exc) == "ErrorWrapper cause:some_error"
     end
 
+    test "wraps error tuple with custom fields" do
+      exc = ErrorWrapper.wrap({:error, :some_error}, some_field: "some-value")
+      assert exc.some_field == "some-value"
+    end
+
     test "wraps arbitrary terms" do
       exc = ErrorWrapper.wrap(:some_error)
 
       assert exc.cause == :some_error
       assert to_string(exc) == "ErrorWrapper cause:some_error"
+    end
+
+    test "wraps arbitrary terms with custom fields" do
+      exc = ErrorWrapper.wrap(:some_error, some_field: "some-value")
+      assert exc.some_field == "some-value"
     end
   end
 
