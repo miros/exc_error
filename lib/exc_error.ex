@@ -41,6 +41,7 @@ defmodule ExcError do
 
         defoverridable wrap: 1
 
+        @impl Exception
         def message(exc), do: unquote(__MODULE__).default_message(exc)
         defoverridable message: 1
 
