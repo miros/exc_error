@@ -36,6 +36,7 @@ defmodule ExcErrorTest do
 
   describe "custom message calllback" do
     ExcError.define ErrorWithMessageCallback do
+      @impl true
       def message(exc), do: "custom callback message - #{exc.message}"
     end
 
@@ -50,6 +51,7 @@ defmodule ExcErrorTest do
 
   describe "several custom fields and custom message callback" do
     ExcError.define ErrorWithCustomFields, [:some_field, :other_field] do
+      @impl true
       def message(exc), do: "#{exc.some_field} - #{exc.other_field}"
     end
 
@@ -91,6 +93,7 @@ defmodule ExcErrorTest do
 
   describe "fixed message but custom message callback" do
     ExcError.define ErrorWithFixedMessageAndCallback, message: "fixed message" do
+      @impl true
       def message(exc), do: "#{exc.message} - message callback"
     end
 

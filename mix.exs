@@ -10,7 +10,9 @@ defmodule ExcError.MixProject do
       deps: deps(),
       consolidate_protocols: Mix.env() != :test,
       elixirc_paths: elixirc_paths(Mix.env()),
-      aliases: aliases()
+      aliases: aliases(),
+      package: package(),
+      description: description()
     ]
   end
 
@@ -27,7 +29,26 @@ defmodule ExcError.MixProject do
     [test: ["dialyzer --quiet", "test"]]
   end
 
+  defp package do
+    [
+      name: :exc_error,
+      files: ["lib", "mix.exs", "README*", "LICENSE"],
+      maintainers: ["Miroslav Malkin"],
+      licenses: ["Apache 2.0"],
+      links: %{
+        "GitHub" => "https://github.com/miros/exc_error"
+      }
+    ]
+  end
+
+  defp description() do
+    "Simple error struct factory for Elixir"
+  end
+
   defp deps do
-    [{:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}]
+    [
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+    ]
   end
 end
