@@ -135,6 +135,20 @@ defmodule ExcErrorTest do
       assert exc.some_field == "some-value"
     end
 
+    test "wraps erlang errors" do
+      error =
+        try do
+          :erlang.error(:some_erlang_error)
+        rescue
+          err -> err
+        end
+
+      exc = ErrorWrapper.wrap(error)
+
+      assert exc.cause == :some_erlang_error
+      assert to_string(exc) == "ErrorWrapper cause:some_erlang_error"
+    end
+
     test "wraps arbitrary terms" do
       exc = ErrorWrapper.wrap(:some_error)
 

@@ -32,14 +32,17 @@ defmodule ExcError do
 
         import unquote(__MODULE__).Helpers
 
-        def wrap(_error, options \\ [])
+        def wrap(_cause, options \\ [])
 
         def wrap({:error, error}, options),
-          do: struct(__MODULE__, Keyword.put(options, :cause, error))
+          do: wrap(error, options)
+
+        def wrap(%ErlangError{original: error}, options),
+          do: wrap(error, options)
 
         def wrap(cause, options), do: struct(__MODULE__, Keyword.put(options, :cause, cause))
 
-        defoverridable wrap: 1
+        defoverridable wrap: 1, wrap: 2
 
         @impl Exception
         def message(exc), do: unquote(__MODULE__).default_message(exc)
