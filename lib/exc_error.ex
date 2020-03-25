@@ -14,7 +14,7 @@ defmodule ExcError do
   end
 
   defmacro define(name, options \\ []) do
-    record_fields = prepare_record_fields(options) ++ @default_fields
+    record_fields = prepare_record_fields(options) ++ @default_fields 
 
     quote location: :keep do
       defmodule unquote(name) do

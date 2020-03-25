@@ -71,7 +71,7 @@ end
 
 ExcError.define HttpError, [:method, :url, :code] do
   @impl true
-  def message(exc), do: "HTTP error method:#{method} url:#{url} code:#{code}"
+  def message(exc), do: "HTTP error method:#{exc.method} url:#{exc.url} code:#{exc.code}"
 end
 
 # If no custom fields are provided for your struct, ExcError defines :message field by default:
