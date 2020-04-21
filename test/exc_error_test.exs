@@ -4,8 +4,6 @@ defmodule ExcErrorTest do
 
   require ExcError
 
-  # TODO rewrite to match simple structs
-
   describe "without message" do
     ExcError.define(ErrorWithNoMessage)
 
@@ -127,7 +125,7 @@ defmodule ExcErrorTest do
       exc = ErrorWrapper.wrap({:error, :some_error})
 
       assert exc.cause == :some_error
-      assert to_string(exc) == "ErrorWrapper cause:some_error"
+      assert to_string(exc) == "ErrorWrapper; cause: some_error"
     end
 
     test "wraps error tuple with custom fields" do
@@ -146,14 +144,14 @@ defmodule ExcErrorTest do
       exc = ErrorWrapper.wrap(error)
 
       assert exc.cause == :some_erlang_error
-      assert to_string(exc) == "ErrorWrapper cause:some_erlang_error"
+      assert to_string(exc) == "ErrorWrapper; cause: some_erlang_error"
     end
 
     test "wraps arbitrary terms" do
       exc = ErrorWrapper.wrap(:some_error)
 
       assert exc.cause == :some_error
-      assert to_string(exc) == "ErrorWrapper cause:some_error"
+      assert to_string(exc) == "ErrorWrapper; cause: some_error"
     end
 
     test "wraps arbitrary terms with custom fields" do

@@ -4,7 +4,7 @@ defmodule ExcError.MixProject do
   def project do
     [
       app: :exc_error,
-      version: "0.0.4",
+      version: "0.0.5",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -26,7 +26,7 @@ defmodule ExcError.MixProject do
   end
 
   def aliases() do
-    [test: ["dialyzer --quiet", "test"]]
+    [test: ["dialyzer", "test"]]
   end
 
   defp package do
