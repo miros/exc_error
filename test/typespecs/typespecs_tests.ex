@@ -36,4 +36,15 @@ defmodule TypespecsTests do
   end
 
   @type error_with_custom_type_and_block :: ErrorWithCustomTypeAndBlock.t()
+
+  def type_test do
+    error_fun(%ErrorWithCustomFields{custom_field: "custom-value"})
+  end
+
+  @spec error_fun(ErrorWithCustomFields.t()) :: :ok
+  def error_fun(error) do
+    %ErrorWithCustomFields{} = error
+
+    :ok
+  end
 end

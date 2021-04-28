@@ -81,10 +81,12 @@ defmodule ExcError do
     if Enum.empty?(fields), do: [:message], else: fields
   end
 
+  @term_type {:term, [], Elixir}
+
   defp field_types(fields) do
     Enum.map(fields, fn
-      {key, _} -> {key, :term}
-      key -> {key, :term}
+      {key, _} -> {key, @term_type}
+      key -> {key, @term_type}
     end)
   end
 
